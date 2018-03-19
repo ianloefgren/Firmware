@@ -1,6 +1,7 @@
 #include "../BlockLocalPositionEstimator.hpp"
 #include <systemlib/mavlink_log.h>
 #include <matrix/math.hpp>
+#include <math.h>
 
 extern orb_advert_t mavlink_log_pub;
 
@@ -98,7 +99,7 @@ void BlockLocalPositionEstimator::mocapCorrect()
 
 	if (beta > BETA_TABLE[n_y_mocap]) {
 		if (!(_sensorFault & SENSOR_MOCAP)) {
-			//mavlink_and_console_log_info(&mavlink_log_pub, "[lpe] mocap fault, beta %5.2f", double(beta));
+			// mavlink_and_console_log_info(&mavlink_log_pub, "[lpe] mocap fault, beta %5.2f", double(beta));
 			_sensorFault |= SENSOR_MOCAP;
 		}
 
@@ -116,7 +117,9 @@ void BlockLocalPositionEstimator::mocapCorrect()
 
 void BlockLocalPositionEstimator::mocapCheckTimeout()
 {
-	if (_timeStamp - _time_last_mocap > MOCAP_TIMEOUT) {
+	if ( abs(long(_timeStamp - _time_last_mocap)) > MOCAP_TIMEOUT ) {
+		mavlink_and_console_log_info(&mavlink_log_pub, "_timeStamp: %5.2f, _time_last_mocap: %5.2f, diff: %5.2f",
+										double(_timeStamp),double(_time_last_mocap),abs(long(_timeStamp - _time_last_mocap)));
 		if (!(_sensorTimeout & SENSOR_MOCAP)) {
 			_sensorTimeout |= SENSOR_MOCAP;
 			_mocapStats.reset();

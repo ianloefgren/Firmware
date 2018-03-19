@@ -28,8 +28,8 @@ param set NAV_ACC_RAD 2.0
 param set COM_OF_LOSS_T 5
 param set COM_OBL_ACT 2
 param set COM_OBL_RC_ACT 0
-param set RTL_RETURN_ALT 30.0
-param set RTL_DESCEND_ALT 5.0
+param set RTL_RETURN_ALT 1.0
+param set RTL_DESCEND_ALT 1.0
 param set RTL_LAND_DELAY 5
 param set MIS_TAKEOFF_ALT 2.5
 param set MC_ROLLRATE_P 0.2
@@ -43,7 +43,15 @@ param set EKF2_GBIAS_INIT 0.01
 param set EKF2_ANGERR_INIT 0.01
 param set SDLOG_DIRS_MAX 7
 # GPS only mode
-param set LPE_FUSION 145
+#param set LPE_FUSION 145
+
+# MOCAP data only
+# only fuse land detector
+param set LPE_FUSION 17
+# only use mocap for heading
+param set ATT_EXT_HDG_M 2
+# set fake gps origin for auto takeoff
+param set LPE_FAKE_ORIGIN 1
 
 replay tryapplyparams
 simulator start -s
@@ -52,7 +60,7 @@ gyrosim start
 accelsim start
 barosim start
 adcsim start
-gpssim start
+#gpssim start
 pwm_out_sim start
 sensors start
 commander start
